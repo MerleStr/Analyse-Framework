@@ -12,20 +12,15 @@ from prettytable import PrettyTable
 if not sys.warnoptions:
     warnings.simplefilter("ignore")
 
-#subprocess.run(["C:/Users/merle/Documents/VectorMedianFilter_Build/Debug/VectorMedianFilter.exe"])
-#subprocess.run(["C:/Users/merle/Documents/VectorMedianFilter_Build/Debug/VectorMedianFilter.exe"])
-#subprocess.run(["C:/Users/merle/Documents/VectorMedianFilter_Build/Debug/VectorMedianFilter.exe"])
-#subprocess.run(["C:/Users/merle/Documents/VectorMedianFilter_Build/Debug/VectorMedianFilter.exe"])
+# Scaling the images
+subprocess.run(["C:/Users/merle/Documents/VectorMedianFilter_Build/Debug/VectorMedianFilter.exe"])
 subprocess.run(["C:/Users/merle/Documents/ColorMedianFilter_Build/Debug/ColorMedianFilter.exe"])
-#subprocess.run(["C:/Users/merle/Documents/ColorMedianFilter_Build/Debug/ColorMedianFilter.exe"])
-#subprocess.run(["C:/Users/merle/Documents/ColorMedianFilter_Build/Debug/ColorMedianFilter.exe"])
-#subprocess.run(["C:/Users/merle/Documents/ColorMedianFilter_Build/Debug/ColorMedianFilter.exe"])
 
 tf.enable_eager_execution()
 
-scene = "Scene_14"
+scene = "Scene_17"
 
-#Example: https://www.tensorflow.org/api_docs/python/tf/image/ssim
+# Loading the images
 img_path1 = tf.io.read_file('C:/Users/merle/Pictures/img/' + scene + '/original.jpg')
 img1 = tf.image.decode_jpeg(img_path1, channels=3)
 img_path2 = tf.io.read_file('C:/Users/merle/Pictures/img/' + scene + '/Upscaled/vmf_upscaled.png')
@@ -61,9 +56,7 @@ img16 = tf.image.decode_png(img_path16, channels=3)
 
 names = ['Vector Median Filter with 4 Pixel','Vector Median Filter with 9 Pixel','Anti Vector Median Filter with 4 Pixel','Anti Vector Median Filter with 9 Pixel','Color Median Filter with 4 Pixel, taking the second Pixel','Color Median Filter with 4 Pixel, taking the third Pixel','Color Median Filter with 4 Pixel, taking the average of second and third Pixel','Color Median Filter with 9 Pixel','Bicubic','Content-Adaptive','Perceptual','Generalized','Lanczos','Subsampling','Bilateral']
 
-w = [img2.shape[1]]
-h = [img2.shape[0]]
-
+# Converting the images into a range of 0 to 1
 im1 = tf.image.convert_image_dtype(img1, tf.float32)
 im2 = tf.image.convert_image_dtype(img2, tf.float32)
 im3 = tf.image.convert_image_dtype(img3, tf.float32)
@@ -81,6 +74,7 @@ im14 = tf.image.convert_image_dtype(img14, tf.float32)
 im15 = tf.image.convert_image_dtype(img15, tf.float32)
 im16 = tf.image.convert_image_dtype(img16, tf.float32)
 
+# calculating psnr
 psnr_result1 = tf.image.psnr(im1, im2, max_val=1.0)
 psnr_result2 = tf.image.psnr(im1, im3, max_val=1.0)
 psnr_result3 = tf.image.psnr(im1, im4, max_val=1.0)
@@ -98,6 +92,7 @@ psnr_result14 = tf.image.psnr(im1, im15, max_val=1.0)
 psnr_result15 = tf.image.psnr(im1, im16, max_val=1.0)
 psnr = [psnr_result1.numpy(),psnr_result2.numpy(),psnr_result3.numpy(),psnr_result4.numpy(),psnr_result5.numpy(),psnr_result6.numpy(),psnr_result7.numpy(),psnr_result8.numpy(),psnr_result9.numpy(),psnr_result10.numpy(),psnr_result11.numpy(),psnr_result12.numpy(),psnr_result13.numpy(),psnr_result14.numpy(),psnr_result15.numpy()]
 
+# calculating ssim
 ssim_result1 = tf.image.ssim(im1, im2, max_val=1.0, filter_size=11, filter_sigma=1.5, k1=0.01, k2=0.03)
 ssim_result2 = tf.image.ssim(im1, im3, max_val=1.0, filter_size=11, filter_sigma=1.5, k1=0.01, k2=0.03)
 ssim_result3 = tf.image.ssim(im1, im4, max_val=1.0, filter_size=11, filter_sigma=1.5, k1=0.01, k2=0.03)
@@ -115,6 +110,7 @@ ssim_result14 = tf.image.ssim(im1, im15, max_val=1.0, filter_size=11, filter_sig
 ssim_result15 = tf.image.ssim(im1, im16, max_val=1.0, filter_size=11, filter_sigma=1.5, k1=0.01, k2=0.03)
 ssim = [ssim_result1.numpy(),ssim_result2.numpy(),ssim_result3.numpy(),ssim_result4.numpy(),ssim_result5.numpy(),ssim_result6.numpy(),ssim_result7.numpy(),ssim_result8.numpy(),ssim_result9.numpy(),ssim_result10.numpy(),ssim_result11.numpy(),ssim_result12.numpy(),ssim_result13.numpy(),ssim_result14.numpy(),ssim_result15.numpy()]
 
+#calculating lpips
 image0 = tf.image.per_image_standardization(img1)
 image1 = tf.image.per_image_standardization(img2)
 image2 = tf.image.per_image_standardization(img3)
@@ -131,7 +127,6 @@ image12 = tf.image.per_image_standardization(img13)
 image13 = tf.image.per_image_standardization(img14)
 image14 = tf.image.per_image_standardization(img15)
 image15 = tf.image.per_image_standardization(img16)
-#image6 = np.random.random(img7.shape)
 
 tf.disable_eager_execution()
 
@@ -222,15 +217,13 @@ with tf.compat.v1.Session() as session:
 
 lp2 = [distance21, distance22, distance23, distance24, distance25, distance26, distance27, distance28, distance29, distance210, distance211, distance212, distance213, distance214, distance215]
 
-#Example PrettyTables: https://www.youtube.com/watch?v=gryi-dcF_mY
-#Dokumentation PrettyTables: https://ronisbr.github.io/PrettyTables.jl/v0.7/ 
 
+#Dokumentation PrettyTables: https://ronisbr.github.io/PrettyTables.jl/v0.7/ 
+# creating a table with the values
 table = PrettyTable(['Name', 'PSNR', 'SSIM', 'LPIPS: Alex','LPIPS: VGG'])
 for x in range(0,15):
     table.add_row([names[x],psnr[x],ssim[x],lp[x],lp2[x]])
 print(table)
-
-#print(tabulate([["Name","Age"],["Alice",24],["Bob",19]],headers="firstrow")
 
 input("Press enter to exit")
 
